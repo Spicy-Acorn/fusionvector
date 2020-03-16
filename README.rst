@@ -20,4 +20,6 @@ Contents
 
 **Fuses**
 
+- vectoradd.fuse: Fuse to add two vectors.
 - vectorfromarray.fuse: Fuse to create a vector from an array stored as JSON string.
+- vectorsubtract.fuse: Fuse to subtract two vectors.
