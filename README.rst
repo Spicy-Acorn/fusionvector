@@ -4,6 +4,10 @@ FusionVector
 FusionVector is a node based vector library for Blackmagic Design Fusion created
 by Kristof Indeherberge and Cedric Duriau.
 
+Requirements
+------------
+- `fusionmatrix <https://github.com/cedricduriau/fusionmatrix>`_
+
 Installation
 ------------
 
@@ -17,7 +21,3 @@ Contents
 **Fuses**
 
 - vectorfromarray.fuse: Fuse to create a vector from an array stored as JSON string.
-
-**Modules/Lua**
-
-- vectorutils.lua: Core module for vector operations.
