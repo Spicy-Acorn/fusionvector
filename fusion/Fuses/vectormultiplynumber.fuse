@@ -19,7 +19,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
     REG_NoCommonCtrls = true,
     REGS_Category = "Vonk\\Vector",
     REGS_Name = FUSE_NAME,
-    REGS_OpDescription = "Multiplie a vectors by a number.",
+    REGS_OpDescription = "Multiplies a vector by a number.",
     REGS_OpIconString = FUSE_NAME
 })
 
