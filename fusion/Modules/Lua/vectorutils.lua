@@ -17,5 +17,18 @@ function vectorutils.vector_from_array(columns, array)
     return vec
 end
 
+function vectorutils.vector_to_string(vec)
+    -- vector to custom table
+    local vec_table = {}
+
+    vec_table["columns"] = vectorutils.columns(vec)
+    vec_table["array"] = vectorutils.vector_to_array(vec)
+
+    -- custom table to json string
+    local json_str = json.encode(vec_table)
+
+    return json_str
+end
+
 -- return module table
 return vectorutils
