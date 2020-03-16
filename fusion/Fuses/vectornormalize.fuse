@@ -1,0 +1,57 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+local matrix = self and require("matrix") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "VectorNormalize"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Vector",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Normalizes a vector.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InVector = self:AddInput("Input", "Input", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 1
+    })
+
+    OutVector = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local vec_str = InVector:GetValue(req).Value
+
+    -- vector from interchangeable string
+    local vec = matrixutils.matrix_from_string(vec_str)
+
+    -- multiple by length
+    local len = matrixutils.len(vec)
+    local vec_result = matrix.divnum(vec, len)
+
+    -- vector to interchangeable string
+    local vec_result_str = matrixutils.matrix_to_string(vec_result)
+    local out = Text(vec_result_str)
+
+    OutVector:Set(req, out)
+end
