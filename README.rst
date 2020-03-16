@@ -1,5 +1,5 @@
-FusionJSON
-==========
+FusionVector
+============
 
 FusionVector is a node based vector library for Blackmagic Design Fusion created
 by Kristof Indeherberge and Cedric Duriau.
