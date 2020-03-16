@@ -1,0 +1,97 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local vectorutils = self and require("vectorutils") or nil
+local json = self and require("dkjson") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "VectorFromArray"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Vector",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Creates a vector from an array.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InArray = self:AddInput("Array", "Array", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Lines = 1,
+        LINK_Main = 1
+    })
+ 
+    InColumns = self:AddInput("Columns", "Columns", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 3,
+        INP_Integer = true,
+        INP_MinScale = 1,
+        INP_MaxScale = 4,
+        INP_MinAllowed = 1,
+        LINK_Main = 2
+    })
+
+    InShowInput = self:AddInput("Show Input", "ShowInput", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        INP_External = false,
+        INP_DoNotifyChanged = true
+    })
+
+    OutVector = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+    if inp == InShowInput then
+        local visible
+        if param.Value == 1.0 then visible = true else visible = false end
+        InArray:SetAttrs({LINK_Visible = visible})
+        InColumns:SetAttrs({LINK_Visible = visible})
+    end
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local array_str = InArray:GetValue(req).Value
+    local array = json.decode(array_str)
+    local cols = InColumns:GetValue(req).Value
+
+    -- build vector from metadata vector
+    local vec = vectorutils.vector_from_array(cols, array)
+
+    -- build interchangeable vector string format
+    local vec_str = vectorutils.vector_to_string(vec)
+    local out = Text(vec_str)
+
+    OutVector:Set(req, out)
+end
