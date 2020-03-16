@@ -39,7 +39,8 @@ function Create()
         INP_Integer = true,
         INP_MinScale = 1,
         INP_MaxScale = 4,
-        INP_MinAllowed = 1
+        INP_MinAllowed = 1,
+        LINK_Main = 2
     })
 
     InShowInput = self:AddInput("Show Input", "ShowInput", {
@@ -72,18 +73,16 @@ function NotifyChanged(inp, param, time)
         :type time: float
     ]]
     if inp == InShowInput then
-        if param.Value == 1.0 then
-            InArray:SetAttrs({LINK_Visible = true})
-        else
-            InArray:SetAttrs({LINK_Visible = false})
-        end
+        local visible
+        if param.Value == 1.0 then visible = true else visible = false end
+        InArray:SetAttrs({LINK_Visible = visible})
+        InColumns:SetAttrs({LINK_Visible = visible})
     end
 end
 
 function Process(req)
     -- [[ Creates the output. ]]
     local array_str = InArray:GetValue(req).Value
-
     local array = json.decode(array_str)
     local cols = InColumns:GetValue(req).Value
 
