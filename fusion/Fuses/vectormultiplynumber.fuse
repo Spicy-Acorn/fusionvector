@@ -1,0 +1,96 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+local matrix = self and require("matrix") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "VectorMultiplyNumber"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Vector",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Multiplies a vectors by a number.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InVector = self:AddInput("Input1", "Input1", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 1
+    })
+
+    InNumber = self:AddInput("Input2", "Input2", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 1,
+        INP_Integer = true,
+        INP_MinScale = -100,
+        INP_MaxScale = 100,
+        LINK_Main = 2
+    })
+
+    InShowInput = self:AddInput("Show Input", "ShowInput", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        INP_External = false,
+        INP_DoNotifyChanged = true
+    })
+
+    OutVector = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        LINK_Main = 1
+    })
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+    if inp == InShowInput then
+        local visible
+        if param.Value == 1.0 then visible = true else visible = false end
+        InNumber:SetAttrs({LINK_Visible = visible})
+    end
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local vec_str = InVector:GetValue(req).Value
+    local num = InNumber:GetValue(req).Value
+
+    -- vector from interchangeable string
+    local vec = matrixutils.matrix_from_string(vec_str)
+
+    -- multiple by number
+    local vec_result = matrix.mulnum(vec, num)
+
+    -- vector to interchangeable string
+    local vec_result_str = matrixutils.matrix_to_string(vec_result)
+    local out = Text(vec_result_str)
+
+    OutVector:Set(req, out)
+end
