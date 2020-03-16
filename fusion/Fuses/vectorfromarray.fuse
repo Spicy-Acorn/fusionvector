@@ -1,7 +1,7 @@
 -- ============================================================================
 -- modules
 -- ============================================================================
-local vectorutils = self and require("vectorutils") or nil
+local matrixutils = self and require("matrixutils") or nil
 local json = self and require("dkjson") or nil
 
 -- ============================================================================
@@ -87,10 +87,10 @@ function Process(req)
     local cols = InColumns:GetValue(req).Value
 
     -- build vector from metadata vector
-    local vec = vectorutils.vector_from_array(cols, array)
+    local vec = matrixutils.matrix_from_array(1, cols, array)
 
     -- build interchangeable vector string format
-    local vec_str = vectorutils.vector_to_string(vec)
+    local vec_str = matrixutils.matrix_to_string(vec)
     local out = Text(vec_str)
 
     OutVector:Set(req, out)
