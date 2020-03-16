@@ -17,6 +17,21 @@ function vectorutils.vector_from_array(columns, array)
     return vec
 end
 
+function vectorutils.vector_to_array(vec)
+    local arr = {}
+
+    for _, v in ipairs(vec) do
+        table.insert(arr, v)
+    end
+
+    return arr
+end
+
+function vectorutils.columns(vec)
+    local columns = table.getn(vec)
+    return columns
+end
+
 function vectorutils.vector_to_string(vec)
     -- vector to custom table
     local vec_table = {}
