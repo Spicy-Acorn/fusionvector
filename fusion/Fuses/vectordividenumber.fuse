@@ -36,7 +36,7 @@ function Create()
         LINKID_DataType = "Number",
         INPID_InputControl = "SliderControl",
         INP_Default = 1,
-        INP_Integer = true,
+        INP_Integer = false,
         INP_MinScale = -100,
         INP_MaxScale = 100,
         LINK_Main = 2
