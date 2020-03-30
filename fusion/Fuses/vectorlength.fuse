@@ -74,8 +74,8 @@ function Process(req)
     local vec = matrixutils.matrix_from_string(vec_str)
 
     -- calculate length
-    local vec_len = matrixutils.len(vec)
-    local out = Number(vec_len)
+    local vec_result = matrixutils.len(vec)
+    local out = Number(vec_result)
 
     OutLength:Set(req, out)
 end
