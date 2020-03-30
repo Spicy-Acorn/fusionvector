@@ -25,14 +25,14 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InVector1 = self:AddInput("Input1", "Input1", {
+    InVector1 = self:AddInput("Vector1", "Vector1", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
         LINK_Main = 1
     })
 
-    InVector2 = self:AddInput("Input2", "Input2", {
+    InVector2 = self:AddInput("Vector2", "Vector2", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,

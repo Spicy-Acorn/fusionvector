@@ -24,7 +24,7 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InVector = self:AddInput("Input", "Input", {
+    InVector = self:AddInput("Vector", "Vector", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
@@ -74,8 +74,8 @@ function Process(req)
     local vec = matrixutils.matrix_from_string(vec_str)
 
     -- calculate length
-    local vec_result = matrixutils.len(vec)
-    local out = Number(vec_result)
+    local vec_len = matrixutils.len(vec)
+    local out = Number(vec_len)
 
     OutLength:Set(req, out)
 end

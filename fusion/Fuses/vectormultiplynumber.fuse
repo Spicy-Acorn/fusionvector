@@ -25,14 +25,14 @@ FuRegisterClass(FUSE_NAME, CT_Tool, {
 
 function Create()
     -- [[ Creates the user interface. ]]
-    InVector = self:AddInput("Input1", "Input1", {
+    InVector = self:AddInput("Vector", "Vector", {
         LINKID_DataType = "Text",
         INPID_InputControl = "TextEditControl",
         TEC_Wrap = true,
         LINK_Main = 1
     })
 
-    InNumber = self:AddInput("Input2", "Input2", {
+    InNumber = self:AddInput("Number", "Number", {
         LINKID_DataType = "Number",
         INPID_InputControl = "SliderControl",
         INP_Default = 1,
