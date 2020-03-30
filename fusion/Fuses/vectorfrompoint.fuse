@@ -1,0 +1,97 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+local matrix = self and require("matrix") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "VectorFromPoint"
+DATATYPE = "Text"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Vector",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Create a vector from a point.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InPoint = self:AddInput("Point", "Point", {
+        LINKID_DataType = "Point",
+        INPID_InputControl = "OffsetControl",
+        LINK_Main = 1
+    })
+ 
+    InColumns = self:AddInput("Columns", "Columns", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "SliderControl",
+        INP_Default = 3,
+        INP_Integer = true,
+        INP_MinScale = 1,
+        INP_MaxScale = 3,
+        INP_MinAllowed = 1,
+        INP_MaxAllowed = 3,
+        LINK_Main = 2
+    })
+
+    InShowInput = self:AddInput("Show Input", "ShowInput", {
+        LINKID_DataType = "Number",
+        INPID_InputControl = "CheckboxControl",
+        INP_Integer = true,
+        INP_Default = 0.0,
+        INP_External = false,
+        INP_DoNotifyChanged = true
+    })
+
+    OutVector = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        LINK_Main = 1
+    })
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+    if inp == InShowInput then
+        local visible
+        if param.Value == 1.0 then visible = true else visible = false end
+        InColumns:SetAttrs({LINK_Visible = visible})
+    end
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local p = InPoint:GetValue(req)
+    local col = InColumns:GetValue(req).Value
+
+    -- build vector from point
+    local array = {p.X, p.Y, p.Z}
+    local vec_point = matrixutils.matrix_from_array(1, 3, array)
+    local vec = matrix.subm(vec_point, 1, 1, 1, col)
+
+    -- build interchangeable vector string format
+    local vec_str = matrixutils.matrix_to_string(vec)
+    local out = Text(vec_str)
+
+    OutVector:Set(req, out)
+end
