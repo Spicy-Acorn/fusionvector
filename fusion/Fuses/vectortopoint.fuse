@@ -1,0 +1,62 @@
+-- ============================================================================
+-- modules
+-- ============================================================================
+local matrixutils = self and require("matrixutils") or nil
+local matrix = self and require("matrix") or nil
+
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "VectorToPoint"
+DATATYPE = "Point"
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Vector",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "Create a point from a vector.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+    -- [[ Creates the user interface. ]]
+    InVector = self:AddInput("Vector", "Vector", {
+        LINKID_DataType = "Text",
+        INPID_InputControl = "TextEditControl",
+        TEC_Wrap = true,
+        LINK_Main = 1
+    })
+ 
+    OutPoint = self:AddOutput("Output", "Output", {
+        LINKID_DataType = "Point",
+        INPID_InputControl = "OffsetControl",
+        LINK_Main = 1
+    })
+end
+
+function Process(req)
+    -- [[ Creates the output. ]]
+    local vec_str = InVector:GetValue(req).Value
+
+    -- build vector from interchangable string format
+    local vec = matrixutils.matrix_from_string(vec_str)
+
+    -- validate vector at least of size 1x2
+    local vec_size = table.getn(vec[1])
+    if vec_size < 2 then
+        error(string.format("vector has to be at least of size %d, got %d", 2, vec_size))
+    end
+
+    -- build point from vector
+    local x = vec[1][1]
+    local y = vec[1][2]
+    local z = vec[1][3] or 0
+    local p = Point(x, y, z)
+
+    OutPoint:Set(req, p)
+end
