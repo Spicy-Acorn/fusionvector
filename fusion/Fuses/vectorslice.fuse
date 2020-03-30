@@ -49,7 +49,7 @@ function Create()
         INP_DoNotifyChanged = true
     })
 
-    OutMatrix = self:AddOutput("Output", "Output", {
+    OutVector = self:AddOutput("Output", "Output", {
         LINKID_DataType = "Text",
         LINK_Main = 1
     })
@@ -77,18 +77,18 @@ end
 
 function Process(req)
     -- [[ Creates the output. ]]
-    local mat_str = InVector:GetValue(req).Value
+    local vec_str = InVector:GetValue(req).Value
     local lr = InLeftRight:GetValue(req)
 
-    -- build matrix from interchangeable string format
-    local mat = matrixutils.matrix_from_string(mat_str)
+    -- build vector from interchangeable string format
+    local vec = matrixutils.matrix_from_string(vec_str)
 
     -- slice
-    local mat_sliced = matrix.subm(mat, 1, lr.X, 1, lr.Y)
+    local vec_sliced = matrix.subm(vec, 1, lr.X, 1, lr.Y)
 
-    -- build interchangeable matrix string format
-    local mat_sliced_str = matrixutils.matrix_to_string(mat_sliced)
-    local out = Text(mat_sliced_str)
+    -- build interchangeable vector string format
+    local vec_sliced_str = matrixutils.matrix_to_string(vec_sliced)
+    local out = Text(vec_sliced_str)
 
-    OutMatrix:Set(req, out)
+    OutVector:Set(req, out)
 end
