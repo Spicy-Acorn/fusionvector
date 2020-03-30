@@ -47,7 +47,7 @@ function Create()
         LINKID_DataType = "Number",
         INPID_InputControl = "CheckboxControl",
         INP_Integer = true,
-        INP_Default = 0.0,
+        INP_Default = 1.0,
         INP_External = false,
         INP_DoNotifyChanged = true
     })
@@ -75,6 +75,7 @@ function NotifyChanged(inp, param, time)
     if inp == InShowInput then
         local visible
         if param.Value == 1.0 then visible = true else visible = false end
+        InPoint:SetAttrs({LINK_Visible = visible})
         InColumns:SetAttrs({LINK_Visible = visible})
     end
 end
